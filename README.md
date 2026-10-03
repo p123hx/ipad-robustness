@@ -82,9 +82,7 @@ empirical analysis. This repository publishes the protocol and software work in
 progress on 2026-10-03. No Zenodo DOI has been assigned. No novelty, peer-review,
 adoption or impact claim is made for this work.
 
-The PDF is the pre-publication working-draft snapshot from earlier on the same
-date; its pending-publication checklist records that earlier state. This README
-records the current repository status.
+The PDF describes the current protocol and links to this repository.
 
 AI assistance was used to draft the protocol and write/check the software.
 Hongxi Pu should review and take responsibility for scientific choices and any
