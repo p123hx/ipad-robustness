@@ -1,0 +1,7 @@
+{
+  "purpose": "software-validation",
+  "score_direction": "higher_is_ai",
+  "expected_rows": 8,
+  "inference_completed": false,
+  "description": "Hand-constructed numbers for validating software only. No human texts, AI texts, model inference or research observations."
+}

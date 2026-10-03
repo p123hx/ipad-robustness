@@ -1,0 +1,97 @@
+{
+  "purpose": "software-validation",
+  "contains_detector_research_results": false,
+  "created_utc": "2026-10-03T09:13:40.728806+00:00",
+  "prediction_file_sha256": "dd4ca2915beb3fa8b496d61c758fd1a6397b139b84b101e58984d54d848de3b4",
+  "metadata_file_sha256": "510ae4c9c0222124bba978249502773e675482188c9f7d5c786f4b5433244654",
+  "evaluator_sha256": "4fc8b1b66108b8cf13b5e83b94e22ce735a45ccdf7131404a8b71e434dd139cc",
+  "threshold": 0.5,
+  "decision_rule": "score >= threshold predicts AI",
+  "metadata": {
+    "purpose": "software-validation",
+    "score_direction": "higher_is_ai",
+    "expected_rows": 8,
+    "inference_completed": false,
+    "description": "Hand-constructed numbers for validating software only. No human texts, AI texts, model inference or research observations."
+  },
+  "conditions": {
+    "synthetic_fixture": {
+      "metrics": {
+        "n": 8,
+        "n_ai": 4,
+        "n_human": 4,
+        "tp": 3,
+        "fp": 1,
+        "tn": 3,
+        "fn": 1,
+        "accuracy": 0.75,
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "false_positive_rate": 0.25,
+        "auroc": 0.8125
+      },
+      "uncertainty": {
+        "method": "source-group percentile bootstrap",
+        "confidence": 0.95,
+        "n_groups": 4,
+        "repetitions": 2000,
+        "seed": 20261003,
+        "accuracy": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.5,
+            1.0
+          ],
+          "status": "computed"
+        },
+        "precision": {
+          "valid_replicates": 1988,
+          "undefined_replicates": 12,
+          "interval": [
+            0.5,
+            1.0
+          ],
+          "status": "computed"
+        },
+        "recall": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.25,
+            1.0
+          ],
+          "status": "computed"
+        },
+        "f1": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.4,
+            1.0
+          ],
+          "status": "computed"
+        },
+        "false_positive_rate": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.0,
+            0.75
+          ],
+          "status": "computed"
+        },
+        "auroc": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.25,
+            1.0
+          ],
+          "status": "computed"
+        }
+      }
+    }
+  }
+}

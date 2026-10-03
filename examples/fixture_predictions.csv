@@ -1,0 +1,9 @@
+sample_id,group_id,split,condition,label,score
+fake-h1,fake-p1,test,synthetic_fixture,0,0.10
+fake-a1,fake-p1,test,synthetic_fixture,1,0.90
+fake-h2,fake-p2,test,synthetic_fixture,0,0.30
+fake-a2,fake-p2,test,synthetic_fixture,1,0.80
+fake-h3,fake-p3,test,synthetic_fixture,0,0.60
+fake-a3,fake-p3,test,synthetic_fixture,1,0.70
+fake-h4,fake-p4,test,synthetic_fixture,0,0.40
+fake-a4,fake-p4,test,synthetic_fixture,1,0.20

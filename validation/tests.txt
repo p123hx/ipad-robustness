@@ -1,0 +1,17 @@
+test_cluster_bootstrap_reproducibility (test_evaluate.EvaluationTests.test_cluster_bootstrap_reproducibility) ... ok
+test_confusion_and_threshold_boundary (test_evaluate.EvaluationTests.test_confusion_and_threshold_boundary) ... ok
+test_duplicate_id (test_evaluate.EvaluationTests.test_duplicate_id) ... ok
+test_full_pipeline_and_metadata (test_evaluate.EvaluationTests.test_full_pipeline_and_metadata) ... ok
+test_group_leakage (test_evaluate.EvaluationTests.test_group_leakage) ... ok
+test_missing_score (test_evaluate.EvaluationTests.test_missing_score) ... ok
+test_nonfinite_score (test_evaluate.EvaluationTests.test_nonfinite_score) ... ok
+test_out_of_range_score (test_evaluate.EvaluationTests.test_out_of_range_score) ... ok
+test_perfect_auc (test_evaluate.EvaluationTests.test_perfect_auc) ... ok
+test_reversed_auc (test_evaluate.EvaluationTests.test_reversed_auc) ... ok
+test_tied_auc (test_evaluate.EvaluationTests.test_tied_auc) ... ok
+test_undefined_precision (test_evaluate.EvaluationTests.test_undefined_precision) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.004s
+
+OK

@@ -1,0 +1,14 @@
+{
+  "purpose": "study",
+  "score_direction": "higher_is_ai",
+  "expected_rows": null,
+  "inference_completed": false,
+  "detector_id": "TODO confirm complete IPAD pipeline",
+  "detector_revision": "TODO pin base, all adapters, tokenizer and code revisions",
+  "dataset_revision": "TODO identify exact corpus versions and split manifest",
+  "score_definition": "TODO verify normalized yes/no scores, component mapping and aggregation",
+  "threshold_basis": "TODO fix source-validation threshold before target-test inspection",
+  "run_date": "TODO actual inference date",
+  "inference_configuration": "TODO file/hash recording prompts, decoding, regeneration model, truncation and numeric precision",
+  "source_manifest_sha256": "TODO hash full sample provenance manifest"
+}

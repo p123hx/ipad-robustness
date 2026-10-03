@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+data/
+private/
+checkpoints/
+real_predictions.csv
+completed_study_metadata.json
+real_results.json
+*.safetensors
+*.bin
