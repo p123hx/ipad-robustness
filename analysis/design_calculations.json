@@ -1,0 +1,81 @@
+{
+  "analysis_date": "2026-10-06",
+  "kind": "analytical study design and constructed score example",
+  "contains_detector_performance_results": false,
+  "zero_error_bounds": [
+    {
+      "n_independent_humans": 50,
+      "false_positives": 0,
+      "one_sided_95pct_fpr_upper": 0.05815507911697225,
+      "probability_zero_errors_if_true_fpr_1pct": 0.6050060671375364
+    },
+    {
+      "n_independent_humans": 100,
+      "false_positives": 0,
+      "one_sided_95pct_fpr_upper": 0.029513049607039925,
+      "probability_zero_errors_if_true_fpr_1pct": 0.3660323412732292
+    },
+    {
+      "n_independent_humans": 300,
+      "false_positives": 0,
+      "one_sided_95pct_fpr_upper": 0.009936081944457708,
+      "probability_zero_errors_if_true_fpr_1pct": 0.04904089407128572
+    },
+    {
+      "n_independent_humans": 1000,
+      "false_positives": 0,
+      "one_sided_95pct_fpr_upper": 0.002991249545095295,
+      "probability_zero_errors_if_true_fpr_1pct": 4.317124741065786e-05
+    }
+  ],
+  "zero_error_sample_requirements": [
+    {
+      "target_fpr": 0.05,
+      "min_n_if_zero_errors": 59
+    },
+    {
+      "target_fpr": 0.01,
+      "min_n_if_zero_errors": 299
+    },
+    {
+      "target_fpr": 0.001,
+      "min_n_if_zero_errors": 2995
+    }
+  ],
+  "threshold": 0.54,
+  "comparison": ">",
+  "constructed_example": {
+    "reference": {
+      "n": 200,
+      "n_ai": 100,
+      "n_human": 100,
+      "tp": 100,
+      "fp": 0,
+      "tn": 100,
+      "fn": 0,
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "false_positive_rate": 0.0,
+      "auroc": 1.0
+    },
+    "shifted": {
+      "n": 200,
+      "n_ai": 100,
+      "n_human": 100,
+      "tp": 0,
+      "fp": 0,
+      "tn": 100,
+      "fn": 100,
+      "accuracy": 0.5,
+      "precision": null,
+      "recall": 0.0,
+      "f1": 0.0,
+      "false_positive_rate": 0.0,
+      "auroc": 1.0
+    }
+  },
+  "interpretation": "Perfect ranking need not imply useful recall at a frozen threshold.",
+  "assumptions": "Binomial calculations require independent representative human samples and a fixed threshold."
+}

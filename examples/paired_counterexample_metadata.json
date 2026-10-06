@@ -1,0 +1,6 @@
+{
+  "purpose": "software-validation",
+  "score_direction": "higher_is_ai",
+  "expected_rows": 400,
+  "description": "Constructed numerical counterexample; no text, detector or generation experiment."
+}

@@ -1,3 +1,14 @@
+test_ambiguous_and_missing_prompts_rejected (test_design.DesignTests.test_ambiguous_and_missing_prompts_rejected) ... ok
+test_changed_human_rejected (test_design.DesignTests.test_changed_human_rejected) ... ok
+test_exact_zero_and_all_error (test_design.DesignTests.test_exact_zero_and_all_error) ... ok
+test_invalid_binomial_input (test_design.DesignTests.test_invalid_binomial_input) ... ok
+test_missing_pair_rejected (test_design.DesignTests.test_missing_pair_rejected) ... ok
+test_pairing_is_order_independent_and_reproducible (test_design.DesignTests.test_pairing_is_order_independent_and_reproducible) ... ok
+test_paper_strict_threshold (test_design.DesignTests.test_paper_strict_threshold) ... ok
+test_prompt_join_handles_row_permutation (test_design.DesignTests.test_prompt_join_handles_row_permutation) ... ok
+test_repeated_human_rejected (test_design.DesignTests.test_repeated_human_rejected) ... ok
+test_sample_requirement_is_minimal (test_design.DesignTests.test_sample_requirement_is_minimal) ... ok
+test_shared_controls_and_balanced_identity (test_design.DesignTests.test_shared_controls_and_balanced_identity) ... ok
 test_cluster_bootstrap_reproducibility (test_evaluate.EvaluationTests.test_cluster_bootstrap_reproducibility) ... ok
 test_confusion_and_threshold_boundary (test_evaluate.EvaluationTests.test_confusion_and_threshold_boundary) ... ok
 test_duplicate_id (test_evaluate.EvaluationTests.test_duplicate_id) ... ok
@@ -12,6 +23,6 @@ test_tied_auc (test_evaluate.EvaluationTests.test_tied_auc) ... ok
 test_undefined_precision (test_evaluate.EvaluationTests.test_undefined_precision) ... ok
 
 ----------------------------------------------------------------------
-Ran 12 tests in 0.004s
+Ran 23 tests in 0.088s
 
 OK

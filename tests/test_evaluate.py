@@ -24,7 +24,7 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual(auc(rows([0,1,0,1],[.1,.5,.5,.9])),.875)
 
     def test_confusion_and_threshold_boundary(self):
-        m=metrics(rows([0,1,0,1],[.5,.5,.2,.1]),.5)
+        m=metrics(rows([0,1,0,1],[.5,.5,.2,.1]),.5, comparison='>=')
         self.assertEqual([m[k] for k in ['tp','fp','tn','fn']],[1,1,1,1])
         self.assertEqual(m['f1'],.5)
 

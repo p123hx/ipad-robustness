@@ -69,12 +69,14 @@ def auc(rows):
     return (rank_sum - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)
 
 
-def metrics(rows, threshold):
+def metrics(rows, threshold, comparison='>'):
+    if comparison not in {'>', '>='}:
+        raise ValueError('Comparison must be > or >=')
     if not rows:
         raise ValueError('No rows to score')
     tp = fp = tn = fn = 0
     for r in rows:
-        pred = r['score'] >= threshold
+        pred = r['score'] > threshold if comparison == '>' else r['score'] >= threshold
         if pred and r['label']: tp += 1
         elif pred: fp += 1
         elif r['label']: fn += 1
@@ -93,7 +95,7 @@ def quantile(values, p):
     return values[lo] + (values[hi]-values[lo])*(x-lo)
 
 
-def bootstrap(rows, threshold, repetitions=2000, seed=20261003):
+def bootstrap(rows, threshold, repetitions=2000, seed=20261003, comparison='>'):
     """Percentile intervals resampling source groups, preserving paired rows."""
     groups = defaultdict(list)
     for r in rows: groups[r['group_id']].append(r)
@@ -105,7 +107,7 @@ def bootstrap(rows, threshold, repetitions=2000, seed=20261003):
     samples = {k: [] for k in names}
     for _ in range(repetitions):
         drawn = [row for key in rng.choices(keys, k=len(keys)) for row in groups[key]]
-        m = metrics(drawn, threshold)
+        m = metrics(drawn, threshold, comparison)
         for k in names:
             if m[k] is not None: samples[k].append(m[k])
     result = {'method': 'source-group percentile bootstrap', 'confidence': 0.95,
@@ -114,11 +116,12 @@ def bootstrap(rows, threshold, repetitions=2000, seed=20261003):
         reliable_count = len(v) >= max(20, math.ceil(0.8*repetitions))
         result[k] = {'valid_replicates':len(v), 'undefined_replicates':repetitions-len(v),
                      'interval': [quantile(v,.025),quantile(v,.975)] if reliable_count else None,
-                     'status': 'computed' if reliable_count else 'too_few_defined_replicates'}
+                     'status': ('degenerate_resamples' if min(v)==max(v) else 'computed') if reliable_count else 'too_few_defined_replicates'}
     return result
 
 
-def evaluate(path, metadata_path, threshold, purpose, repetitions=2000, seed=20261003):
+def evaluate(path, metadata_path, threshold, purpose, repetitions=2000, seed=20261003,
+             comparison='>', paired_conditions=None):
     if not math.isfinite(threshold) or not 0 <= threshold <= 1:
         raise ValueError('Threshold must be finite and in [0,1]')
     if repetitions < 100:
@@ -151,12 +154,22 @@ def evaluate(path, metadata_path, threshold, purpose, repetitions=2000, seed=202
               'created_utc':datetime.now(timezone.utc).isoformat(),
               'prediction_file_sha256':sha256(path), 'metadata_file_sha256':sha256(metadata_path),
               'evaluator_sha256':sha256(__file__), 'threshold':threshold,
-              'decision_rule':'score >= threshold predicts AI', 'metadata':meta, 'conditions':{}}
+              'decision_rule':f'score {comparison} threshold predicts AI', 'metadata':meta, 'conditions':{}}
     for i,(name,subset) in enumerate(sorted(conditions.items())):
         if {r['label'] for r in subset} != {0,1}:
             raise ValueError(f'Condition {name} must contain human and AI examples')
-        output['conditions'][name] = {'metrics':metrics(subset,threshold),
-                    'uncertainty':bootstrap(subset,threshold,repetitions,seed+i)}
+        output['conditions'][name] = {'metrics':metrics(subset,threshold,comparison),
+                    'uncertainty':bootstrap(subset,threshold,repetitions,seed+i,comparison)}
+    if paired_conditions:
+        from design import paired_comparison, binomial_upper
+        output['paired_comparison'] = paired_comparison(
+            rows, *paired_conditions, threshold, repetitions, seed, comparison)
+        ref_metrics = output['conditions'][paired_conditions[0]]['metrics']
+        output['shared_human_fpr'] = {
+            'false_positives': ref_metrics['fp'], 'n_unique_humans': ref_metrics['n_human'],
+            'one_sided_95pct_upper': binomial_upper(ref_metrics['fp'], ref_metrics['n_human']),
+            'assumption': 'independent human source groups, representative sampling and fixed threshold',
+            'method': 'exact binomial upper bound; shared humans counted once'}
     return output
 
 
@@ -169,9 +182,11 @@ def main():
     ap.add_argument('--bootstrap',type=int,default=2000)
     ap.add_argument('--seed',type=int,default=20261003)
     ap.add_argument('--out',required=True)
+    ap.add_argument('--comparison',choices=['>','>='],default='>')
+    ap.add_argument('--paired',nargs=2,metavar=('REFERENCE','SHIFTED'))
     args=ap.parse_args()
     try:
-        result=evaluate(args.predictions,args.metadata,args.threshold,args.purpose,args.bootstrap,args.seed)
+        result=evaluate(args.predictions,args.metadata,args.threshold,args.purpose,args.bootstrap,args.seed,args.comparison,args.paired)
     except (ValueError,KeyError,OSError) as e:
         ap.error(str(e))
     Path(args.out).parent.mkdir(parents=True,exist_ok=True)

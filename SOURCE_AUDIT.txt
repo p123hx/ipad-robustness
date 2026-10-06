@@ -1,41 +1,42 @@
-Inspected 2026-10-03. Public source inspection, not an inference reproduction.
+Source audit — updated 2026-10-06
 
-Official paper (27 pages including appendices and checklist):
+Published method
+----------------
 https://proceedings.nips.cc/paper_files/paper/2025/file/f4d6932b6b9eec9b9d595e2847d095c1-Paper-Conference.pdf
+Verified pp. 3–4: normalized yes/no component scores; PTCV weight 0.45;
+RC weight 0.55; strict final decision score > 0.54.
 
-Public GitHub repository:
-https://github.com/Bellafc/IPAD-Inver-Prompt-for-AI-Detection
-The main-branch tree inspected contained README.md and two training JSONL files.
-Its README links the model repository below. The small GitHub tree does not
-imply that weights or inference helpers are unavailable elsewhere.
+Data correspondence
+-------------------
+The executed audit uses two IPAD files and four original OUTFOX files. All
+immutable URLs, digests, byte sizes and cross-check counts are recorded in
+analysis/corpus_audit.json. Source and generation-context hashes appear in
+analysis/source_groups.csv. Exact correspondence does not independently prove
+human authorship, near-duplicate independence or exclusion from training.
+Raw passages are cached locally, not committed.
 
-IPAD model repository:
+Statistics
+----------
+https://itl.nist.gov/div898/software/dataplot/refman2/auxillar/exacbino.htm
+The zero-error upper bound follows by solving (1-p)^n = 0.05. Calculations are
+in analysis/design_calculations.json. Independent software oracles and versions
+are in validation/independent_crosscheck.json. The score counterexample is
+constructed, not detector output.
+
+Inference remains pending
+-------------------------
 https://huggingface.co/bellafc/IPAD
-Observed revision: e57952ab8f36a77421a02f96ac2a2fa13d324b6e
-Adapter directories observed: inverter, Distinguisher_PTCV, Distinguisher_RC.
-The repository also includes testing_data and two API helper scripts.
+Pinned data revision: e57952ab8f36a77421a02f96ac2a2fa13d324b6e
+The initial source inspection on 2026-10-03 identified a need to verify adapter
+semantics, tokenizer yes/no handling, probability extraction, regeneration and
+sample-to-score correspondence before reproduction. A directory name alone is
+not proof of a checkpoint's role. This repository does not load IPAD weights.
 
-Base model:
-https://huggingface.co/microsoft/Phi-3-medium-128k-instruct
-Observed revision: a088b37c71d441ab6d862bb3fcfe6165b3014702
-The full-precision 14B-parameter model needs much more memory than this session's
-approximately 9.7 GiB host memory for ordinary loading. No NVIDIA GPU utility was
-available here. Quantized or offloaded execution was not attempted or validated.
-
-Reproduction questions to resolve before inference:
-1. The paper names prompt/text consistency as PTCV and regenerated-text comparison
-   as RC. Model-card usage comments appear to associate the names differently.
-   Confirm actual checkpoint semantics using the training format and an author;
-   do not silently swap adapters based on directory names.
-2. At the inspected revision, distinguishers_testscript.py contains prompt-
-   reconstruction requests, while prompt_inverter_testscript.py handles a
-   local yes/no probability side-channel file. Filenames alone are insufficient
-   to establish the complete inference pipeline.
-3. The probability-file script depends on an hf_engine customization that is not
-   implemented in this new package. Reading stale or mismatched probabilities
-   would invalidate results. Pair each score with a verified request/sample ID.
-4. Inspect tokenizer handling of yes/no, output normalization, regeneration model,
-   ensemble weight, threshold and truncation. Record exact component revisions.
-
-These are implementation questions, not findings about IPAD's detection quality.
-No conclusion about published-result validity follows from this source audit.
+Versions
+--------
+0.1 (2026-10-03): initial protocol and score evaluator.
+0.2 (2026-10-06): corpus audit, original-context manifest, paired contrasts,
+exact error bounds and revised protocol.
+Earlier Zenodo record supplied by the author: https://zenodo.org/records/23120967
+Its contents were not accessible programmatically in this session. Do not assume
+that it archives version 0.2.

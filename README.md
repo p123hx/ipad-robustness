@@ -1,110 +1,140 @@
-# IPAD robustness evaluation protocol
+# Evaluating IPAD under generator shift
 
-Working draft created 2026-10-03 at Hongxi Pu's direction.
+A matched-source evaluation protocol, corpus audit and statistical implementation.
 
-**Status: protocol and score-evaluation software, not an empirical IPAD report.**
-No IPAD model was run, no new text corpus was collected, and no detector
-performance findings are reported. The fixture is invented numerical input for
-software tests only. It must never be included as a research-results table.
+**Version 0.2 · 6 October 2026 · Hongxi Pu**
 
-## Contents
+[Read the five-page protocol](IPAD_Robustness_Protocol.pdf).
+The completed work is a public-data correspondence audit and statistical design
+analysis. IPAD inference and the new-generator experiment remain to be run.
 
-- `IPAD_Robustness_Protocol.pdf`: four-page preliminary research protocol.
-- `evaluate.py`: Python 3.10+ standard-library evaluator for saved detector scores.
-- `tests/test_evaluate.py`: regression tests for metrics and input validation.
-- `examples/fixture_predictions.csv` and `fixture_metadata.json`: synthetic
-  software-check inputs; not human/AI text or IPAD predictions.
-- `validation/`: executed checks, clearly labeled as software validation.
-- `study_metadata.template.json`: information to complete before real evaluation.
-- `build_report.py`: PDF source; requires reportlab, not needed for evaluation.
-- `SOURCE_AUDIT.txt`: source locations and reproduction issues to resolve.
+## What this version adds
 
-## Run the software checks
+- Joins 500 human/reference pairs from the public IPAD test files by problem
+  statement. Only 492 pairs align by file position, so row-number pairing is
+  insufficient. All human passages match the original OUTFOX release; all
+  reference passages match after whitespace normalization.
+- Recovers all 500 original generation contexts, including their length
+  instructions, and records their hashes for subsequent generation.
+- Creates a deterministic 100/300/100 development/test/reserve manifest with
+  source identifiers and hashes. This is a split of existing public test data,
+  not a newly collected corpus or proof of exclusion from IPAD training.
+- Computes paired changes in recall, AUROC and accuracy while keeping human
+  controls fixed. Missing pairs and inconsistent human scores are rejected.
+- Quantifies the limits of a small human control set: zero errors among 100
+  independent human texts gives a one-sided 95% FPR upper bound of 2.951%.
+  At least 299 zero-error observations are needed for this bound to be <=1%.
+- Includes a constructed score example in which AUROC stays at 1 while recall
+  at a fixed threshold drops. These are not measured IPAD scores.
+
+## Reproduce the completed analyses
+
+Python 3.10+ is sufficient for the audit and evaluator. Run from this directory.
+The download step fetches six pinned public source files (about 6.5 MB total).
+Raw third-party passages stay in the ignored local cache; only hashes and counts
+are committed. Pickled OUTFOX lists are hash-checked and loaded by an unpickler
+that disallows class loading.
 
 ```sh
+python3 audit_corpus.py --download
+python3 design_analysis.py
 python3 -m unittest discover -s tests -v
-python3 evaluate.py --predictions examples/fixture_predictions.csv \
-  --metadata examples/fixture_metadata.json --threshold 0.5 \
-  --purpose software-validation --bootstrap 2000 \
-  --out validation/fixture_metrics.json
+python3 evaluate.py --predictions examples/paired_counterexample.csv \
+  --metadata examples/paired_counterexample_metadata.json \
+  --threshold 0.54 --comparison '>' --purpose software-validation \
+  --paired reference shifted --bootstrap 2000 --seed 20261006 \
+  --out validation/paired_counterexample_metrics.json
 ```
 
-The 0.5 threshold is a software example, NOT an IPAD reproduction setting.
-Output timestamps vary; metric values are deterministic for a fixed input and seed.
+The 500-row manifest and corpus findings are in `analysis/source_groups.csv`
+and `analysis/corpus_audit.json`. Exact planning calculations are in
+`analysis/design_calculations.json`. Files under `examples/` and `validation/`
+contain constructed software inputs and validation outputs, not detector results.
 
-## Real score input
+For independent numerical checks and PDF generation:
 
-CSV fields:
+```sh
+python3 -m pip install -r requirements-validation.txt
+python3 validate_numerics.py
+python3 build_report.py
+```
 
-| Field | Meaning |
+PDF generation uses DejaVu fonts under `/usr/share/fonts/truetype/dejavu/`.
+Validation compares metrics against scikit-learn (200 randomized cases), exact
+binomial bounds against SciPy (30 cases), and paired intervals against a separate
+NumPy/scikit-learn calculation using the same 400 group draws. These checks
+validate the implementation; they do not validate IPAD's detection performance.
+
+## Real prediction interface
+
+| CSV field | Meaning |
 |---|---|
-| sample_id | Unique row ID. Repeated texts in different conditions need distinct row IDs and the same source group. |
-| group_id | Stable original prompt/source-document group; all human, generated and perturbed descendants stay in one split. |
-| split | train, validation or test; only test rows enter reported performance. |
-| condition | One evaluable human-versus-AI setting, e.g. reference_generator or shifted_generator. Include both labels in each condition. |
-| label | 0 = human; 1 = AI-generated. Provenance must establish this independently of the detector. |
-| score | Finite normalized score in [0,1]; larger means more likely AI-generated. |
+| sample_id | Unique evaluation row identifier. |
+| text_id | Stable identifier/hash for the exact passage; required in paired mode. Shared human text has the same identifier in both conditions. |
+| group_id | Original source group; all descendants remain in one split. |
+| split | train, validation or test. Only test rows are evaluated. |
+| condition | Reference or shifted generator condition. |
+| label | 0 = human; 1 = AI, determined from source provenance. |
+| score | Finite score in [0,1], with larger values indicating AI. |
 
-Use the same group_id for matched reference/shifted conditions. Confidence
-intervals are calculated separately within conditions; this version does NOT
-compute confidence intervals for between-condition differences. Do not treat
-overlap/non-overlap of separate intervals as a significance test. No pooled
-overall metric is produced, to avoid double-counting reused human controls.
+The matched mode requires one human and one AI row in each condition per source
+group. It checks shared human identifiers and scores, repeated human identifiers,
+and complete group correspondence. It resamples a group simultaneously across
+conditions, then computes shifted-minus-reference metric differences. Reused
+human controls are counted once for the FPR upper bound. Zero-width bootstrap
+intervals are flagged and must not be interpreted as absence of population risk.
+Exact binomial bounds additionally assume independent representative human
+samples and a fixed decision rule; identifiers alone do not establish independence.
 
-Complete `study_metadata.template.json` in a new file. Record the threshold
-decision before inspecting target-test predictions. Supply expected_rows from
-the full input manifest, before inference; do not adjust it to hide failures.
-The evaluator rejects missing scores and count mismatches. It cannot discover
-missing examples if the manifest/count itself is wrong. Identifier checks do
-not replace textual deduplication or a training-contamination audit.
+Complete `study_metadata.template.json` with the actual inference provenance and
+predeclared row count before invoking study mode. The wrapper validates declared
+metadata and row counts; it cannot authenticate the declarations, detect every
+near duplicate or establish training-set independence. Log every attempted
+sample and resolve failures before scoring; never repair a count mismatch by
+silently reducing the expected sample count.
 
 ```sh
 python3 evaluate.py --predictions real_predictions.csv \
-  --metadata completed_study_metadata.json --threshold YOUR_FIXED_THRESHOLD \
-  --purpose study --bootstrap 2000 --out real_results.json
+  --metadata completed_study_metadata.json --threshold 0.54 --comparison '>' \
+  --purpose study --paired reference shifted --bootstrap 2000 \
+  --seed 20261006 --out real_results.json
 ```
 
-Do not feed generated explanatory text, ROUGE scores or bare yes/no labels into
-the probability column. This package does not implement IPAD inference. First
-verify tokenization, normalized yes/no score extraction, adapter-to-module
-mapping, regeneration, fusion, and threshold calibration. A substituted
-generator, prompt or quantized checkpoint defines a modified configuration and
-must be recorded as such.
+The published IPAD merge uses weight 0.45 for PTCV, 0.55 for RC, and a strict
+`score > 0.54` decision rule. This package consumes saved continuous scores and
+**does not implement IPAD inference**. Verify actual checkpoint semantics,
+yes/no probability extraction, fusion and regeneration before using those
+settings. The paper's component mapping, rather than a directory name alone,
+should determine the score definition. Any replacement regeneration model or
+quantization change must be documented as a configuration change.
 
-## Completed and pending
+## Interpretation and next experiment
 
-Completed: protocol draft; public source inspection; CPU score evaluator;
-unit checks and a separate numerical cross-check against scikit-learn.
+The next experiment adds a generator using the recovered OUTFOX contexts.
+No additional generator has yet been selected or tested. Freeze its version,
+system message, decoding settings and the complete detector configuration before
+collecting test scores. The historical reference and a new generation may differ
+in more than model identity if the original sampling or system settings cannot
+be recovered. A model-only comparison requires regenerating both conditions
+under common documented settings.
 
-Pending: researcher review; exact generator/domain/corpus selection; source and
-license audit; end-to-end IPAD inference validation; real prediction collection;
-empirical analysis. This repository publishes the protocol and software work in
-progress on 2026-10-03. No Zenodo DOI has been assigned. No novelty, peer-review,
-adoption or impact claim is made for this work.
+The 300 test groups will yield 900 distinct passages and 1,200 condition-specific
+rows: 300 human scores are reused, not independently observed twice. Report
+recall and AUROC differences, shared-human FPR, coverage and component diagnostics.
+The 20 qualitative examples are selected by manifest order before inference;
+plausible reconstructed prompts are not, by themselves, evidence of faithfulness.
 
-The PDF describes the current protocol and links to this repository.
+## Sources and versions
 
-AI assistance was used to draft the protocol and write/check the software.
-Hongxi Pu should review and take responsibility for scientific choices and any
-public authorship statement before release. No Meta data or code is included.
+- Chen et al., IPAD, NeurIPS 2025: https://doi.org/10.52202/085713-5580
+- IPAD public resources: https://huggingface.co/bellafc/IPAD
+- OUTFOX: https://github.com/ryuryukke/OUTFOX
+- Exact binomial bounds: https://itl.nist.gov/div898/software/dataplot/refman2/auxillar/exacbino.htm
 
-## Publication preparation
+Immutable source revisions and file digests are recorded in the corpus audit.
+The [earlier protocol record on Zenodo](https://zenodo.org/records/23120967)
+predates this revision; it should not be treated as archiving version 0.2 until a
+new version containing these files is deposited. See [CHANGELOG.md](CHANGELOG.md).
 
-A first release can accurately be described as an *evaluation protocol and
-software work in progress*, not a completed robustness study. Use the actual
-release date. A timestamp records when that version was deposited; it does not
-establish when the underlying ideas originated or validate their scientific merit.
-Do not describe planned experiments as completed. The repository owner selected
-the MIT License when creating this repository; see LICENSE. Third-party models
-and datasets retain their own terms and are not redistributed here.
-
-Before publishing, remove private data, review authorship, confirm citations,
-replace draft metadata, and verify the commands above in a fresh checkout.
-The `.gitignore` prevents default raw data, credentials and local caches from
-being staged, but cannot replace a review of files selected for publication.
-
-## Build the PDF
-
-Install ReportLab and the DejaVu fonts. `build_report.py` currently expects
-DejaVu TTF files under `/usr/share/fonts/truetype/dejavu/`; adjust FONT_ROOT for
-your operating system, then run `python3 build_report.py`.
+AI tools assisted with drafting and software development. Source data and models
+retain their original terms; the repository's license covers its own code.

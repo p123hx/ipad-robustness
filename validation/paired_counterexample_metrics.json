@@ -1,0 +1,223 @@
+{
+  "purpose": "software-validation",
+  "contains_detector_research_results": false,
+  "created_utc": "2026-10-06T10:13:52.367022+00:00",
+  "prediction_file_sha256": "83c23b4fcf8796541fa14b6eb6b6f26d5a6850c1976b39486cfa3fdade3a52c2",
+  "metadata_file_sha256": "0a837c094c9bc4db5defc2bd3c389cd82ee09dafd5c1a3b57b66f967a00783c6",
+  "evaluator_sha256": "7f36c5e5d5b0c9d7d9a25bf197691c83dacdbfa03a0c402aba62f81f51abb4a7",
+  "threshold": 0.54,
+  "decision_rule": "score > threshold predicts AI",
+  "metadata": {
+    "purpose": "software-validation",
+    "score_direction": "higher_is_ai",
+    "expected_rows": 400,
+    "description": "Constructed numerical counterexample; no text, detector or generation experiment."
+  },
+  "conditions": {
+    "reference": {
+      "metrics": {
+        "n": 200,
+        "n_ai": 100,
+        "n_human": 100,
+        "tp": 100,
+        "fp": 0,
+        "tn": 100,
+        "fn": 0,
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "false_positive_rate": 0.0,
+        "auroc": 1.0
+      },
+      "uncertainty": {
+        "method": "source-group percentile bootstrap",
+        "confidence": 0.95,
+        "n_groups": 100,
+        "repetitions": 2000,
+        "seed": 20261006,
+        "accuracy": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "status": "degenerate_resamples"
+        },
+        "precision": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "status": "degenerate_resamples"
+        },
+        "recall": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "status": "degenerate_resamples"
+        },
+        "f1": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "status": "degenerate_resamples"
+        },
+        "false_positive_rate": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.0,
+            0.0
+          ],
+          "status": "degenerate_resamples"
+        },
+        "auroc": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "status": "degenerate_resamples"
+        }
+      }
+    },
+    "shifted": {
+      "metrics": {
+        "n": 200,
+        "n_ai": 100,
+        "n_human": 100,
+        "tp": 0,
+        "fp": 0,
+        "tn": 100,
+        "fn": 100,
+        "accuracy": 0.5,
+        "precision": null,
+        "recall": 0.0,
+        "f1": 0.0,
+        "false_positive_rate": 0.0,
+        "auroc": 1.0
+      },
+      "uncertainty": {
+        "method": "source-group percentile bootstrap",
+        "confidence": 0.95,
+        "n_groups": 100,
+        "repetitions": 2000,
+        "seed": 20261007,
+        "accuracy": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.5,
+            0.5
+          ],
+          "status": "degenerate_resamples"
+        },
+        "precision": {
+          "valid_replicates": 0,
+          "undefined_replicates": 2000,
+          "interval": null,
+          "status": "too_few_defined_replicates"
+        },
+        "recall": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.0,
+            0.0
+          ],
+          "status": "degenerate_resamples"
+        },
+        "f1": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.0,
+            0.0
+          ],
+          "status": "degenerate_resamples"
+        },
+        "false_positive_rate": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            0.0,
+            0.0
+          ],
+          "status": "degenerate_resamples"
+        },
+        "auroc": {
+          "valid_replicates": 2000,
+          "undefined_replicates": 0,
+          "interval": [
+            1.0,
+            1.0
+          ],
+          "status": "degenerate_resamples"
+        }
+      }
+    }
+  },
+  "paired_comparison": {
+    "contrast": "shifted minus reference",
+    "reference": "reference",
+    "shifted": "shifted",
+    "n_groups": 100,
+    "seed": 20261006,
+    "repetitions": 2000,
+    "method": "paired source-group percentile bootstrap",
+    "confidence": 0.95,
+    "scope": "conditional on fixed detector, threshold and collected generations",
+    "differences": {
+      "auroc": {
+        "estimate": 0.0,
+        "interval": [
+          0.0,
+          0.0
+        ],
+        "status": "degenerate_resamples"
+      },
+      "recall": {
+        "estimate": -1.0,
+        "interval": [
+          -1.0,
+          -1.0
+        ],
+        "status": "degenerate_resamples"
+      },
+      "accuracy": {
+        "estimate": -0.5,
+        "interval": [
+          -0.5,
+          -0.5
+        ],
+        "status": "degenerate_resamples"
+      },
+      "false_positive_rate": {
+        "estimate": 0.0,
+        "interval": [
+          0.0,
+          0.0
+        ],
+        "status": "degenerate_resamples"
+      }
+    }
+  },
+  "shared_human_fpr": {
+    "false_positives": 0,
+    "n_unique_humans": 100,
+    "one_sided_95pct_upper": 0.029513049607039925,
+    "assumption": "independent human source groups, representative sampling and fixed threshold",
+    "method": "exact binomial upper bound; shared humans counted once"
+  }
+}

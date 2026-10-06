@@ -1,12 +1,12 @@
 {
   "purpose": "software-validation",
   "contains_detector_research_results": false,
-  "created_utc": "2026-10-03T09:13:40.728806+00:00",
+  "created_utc": "2026-10-06T10:15:49.746162+00:00",
   "prediction_file_sha256": "dd4ca2915beb3fa8b496d61c758fd1a6397b139b84b101e58984d54d848de3b4",
   "metadata_file_sha256": "510ae4c9c0222124bba978249502773e675482188c9f7d5c786f4b5433244654",
-  "evaluator_sha256": "4fc8b1b66108b8cf13b5e83b94e22ce735a45ccdf7131404a8b71e434dd139cc",
+  "evaluator_sha256": "7f36c5e5d5b0c9d7d9a25bf197691c83dacdbfa03a0c402aba62f81f51abb4a7",
   "threshold": 0.5,
-  "decision_rule": "score >= threshold predicts AI",
+  "decision_rule": "score > threshold predicts AI",
   "metadata": {
     "purpose": "software-validation",
     "score_direction": "higher_is_ai",

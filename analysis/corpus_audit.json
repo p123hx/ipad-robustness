@@ -1,0 +1,68 @@
+{
+  "analysis_date": "2026-10-06",
+  "kind": "public corpus structure audit",
+  "contains_detector_performance_results": false,
+  "sources": [
+    {
+      "name": "test_outfox.csv",
+      "url": "https://huggingface.co/bellafc/IPAD/resolve/e57952ab8f36a77421a02f96ac2a2fa13d324b6e/testing_data/test_outfox.csv",
+      "sha256": "cf3449ab676c089872929e47e8139d3a7da5ea8435a2158d679701eb19de7932",
+      "bytes": 2165539
+    },
+    {
+      "name": "test_human_outfox.jsonl",
+      "url": "https://huggingface.co/bellafc/IPAD/resolve/e57952ab8f36a77421a02f96ac2a2fa13d324b6e/testing_data/test_human_outfox.jsonl",
+      "sha256": "171bd27949071086b3a04338eec74b5aa1e31241748d7314e914bae895e4572e",
+      "bytes": 1300119
+    }
+  ],
+  "ai_file_rows": 500,
+  "human_file_rows": 500,
+  "matched_prompts": 500,
+  "outfox_source_crosscheck": {
+    "sources": [
+      {
+        "url": "https://raw.githubusercontent.com/ryuryukke/OUTFOX/8dd6bfdec8e24ff6aeecae3015ab663f257e0350/data/common/test/test_contexts.pkl",
+        "sha256": "d515fc54874e620f42cf2d5d24cffb9258c2c87db48895e90d49686481ed7a13",
+        "bytes": 206043
+      },
+      {
+        "url": "https://raw.githubusercontent.com/ryuryukke/OUTFOX/8dd6bfdec8e24ff6aeecae3015ab663f257e0350/data/common/test/test_humans.pkl",
+        "sha256": "62c6e3ec8c7c1519b51573ac18bc3504957015c2326ad5137faaed33f098ea64",
+        "bytes": 1115696
+      },
+      {
+        "url": "https://raw.githubusercontent.com/ryuryukke/OUTFOX/8dd6bfdec8e24ff6aeecae3015ab663f257e0350/data/common/test/test_problem_statements.pkl",
+        "sha256": "5f6cdf6e27611a8c7ee8b092f6490eeaa6f74557e08749604d95549f6944104d",
+        "bytes": 142407
+      },
+      {
+        "url": "https://raw.githubusercontent.com/ryuryukke/OUTFOX/8dd6bfdec8e24ff6aeecae3015ab663f257e0350/data/chatgpt/test/test_lms.pkl",
+        "sha256": "6e4d3d5abfaea3aae925cd5e2c178c1108bcf6e4682a166621d22ded4db47cb8",
+        "bytes": 1554305
+      }
+    ],
+    "generation_context_prompt_matches": 500,
+    "human_exact_matches": 500,
+    "reference_exact_matches": 498,
+    "reference_whitespace_normalized_matches": 500
+  },
+  "positional_prompt_matches": 492,
+  "unique_human_texts": 500,
+  "unique_reference_texts": 500,
+  "cross_label_exact_text_overlap": 0,
+  "split_groups": {
+    "development": 100,
+    "test": 300,
+    "reserve": 100
+  },
+  "pairing": "unique prompt equality after whitespace normalization; case retained",
+  "selection": "lexicographic SHA256(salt + normalized prompt), salt ipad-followup-20261006\\n",
+  "limitations": [
+    "Exact matching does not establish near-duplicate independence.",
+    "Prompt correspondence does not independently authenticate human authorship.",
+    "This follow-up split does not establish exclusion from original training or evaluation.",
+    "The released predicted_output field is not interpreted as a detector score."
+  ],
+  "manifest_sha256": "b00ec8f3fd77109f9ee2eedb6a83a2c16117228e8a2478a59e4dd6b91b82e4b7"
+}
